@@ -6,7 +6,7 @@ you could run this on your pc but i use macos and just use replit for its convin
 how do i use this?
 set the values for your discord bot token in replit secrets name it what it is in the code
 do this for openAI api key if you want this feture to work (it is always fun to mess arond with error handeling)
-for the ai feture the error messages must be sent to a channal in 1 server for your develop related stuff
+for the ai feture the error messages must be sent to a channal in 1 server for your development related stuff
 fill in the server ID (you will not have to keep this a secret*) and then a channal ID
 you then run the code in replit (other optons can be used but are not supported by me)
 at start you will see a 5 line-ish long error this is fine just ignore it
