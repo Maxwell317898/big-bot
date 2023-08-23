@@ -14,3 +14,9 @@ at start you will see a 5 line-ish long error this is fine just ignore it
 * *server & channal IDs dont have to be a secret because server IDs are only used for identifying servers (your bot has to be on the server that corasponds with the ID)
   also to invite the bot to the server goto your application>bot>permissions then just do administrator now goto >Oauth2>url generator you will see scopes select the bot
   scope you are almost done just select admin for permisions then use that link add it to your development server and test it out
+
+# commands
+- /embed useage /embed aaah what a nice title ~ some smaller text too ~ (color use blue red green)  this cmd makes a dm try it out
+- /embedDM usage /embedDM @user ~ title ~ smaller text ~ (color)  this sends @user a dm with the result of /embed but in there DMs
+- /ask useage /ask (whatever you want here) !this feture is experimental may not work! you should still try /ask hello as the error reporting is still really good
+i might add more fetures soon or smth
