@@ -11,6 +11,6 @@ fill in the server ID (you will not have to keep this a secret*) and then a chan
 you then run the code in replit (other optons can be used but are not supported by me)
 at start you will see a 5 line-ish long error this is fine just ignore it
 
-* server & channal IDs dont have to be a secret because server IDs are only used for identifying servers (your bot has to be on the server that corasponds with the ID)
+* *server & channal IDs dont have to be a secret because server IDs are only used for identifying servers (your bot has to be on the server that corasponds with the ID)
   also to invite the bot to the server goto your application>bot>permissions then just do administrator now goto >Oauth2>url generator you will see scopes select the bot
   scope you are almost done just select admin for permisions then use that link add it to your development server and test it out
