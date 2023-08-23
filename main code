@@ -1,0 +1,138 @@
+# this code uses replit things and a bunch of liberys (don't worry liberys are in the code and read me)
+
+import discord
+from discord.ext import commands
+import os
+import openai
+import asyncio  # Add this line to import the asyncio library
+
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+
+client = commands.Bot(command_prefix="/", intents=intents)
+
+@client.event
+async def on_ready():
+    print('Logged in as {0.user}'.format(client.user))
+
+@client.command()
+async def hello(ctx):
+    await ctx.send("Hello!")
+
+@client.command()
+async def embed(ctx, *, args):
+    try:
+        title, description, color_name = args.split("~")
+        color_name = color_name.strip().lower()
+        color_mapping = {
+            "red": discord.Color.red(),
+            "green": discord.Color.green(),
+            "blue": discord.Color.blue(),
+        }
+        color = color_mapping.get(color_name, discord.Color.default)
+
+        embed = discord.Embed(
+            title=title.strip().capitalize(),
+            description=description.strip().capitalize(),
+            color=color
+        )
+        embed.set_footer(text=f"Sent by: {ctx.author.name}")
+        
+        await ctx.send(embed=embed)
+        await ctx.message.delete()
+
+    except ValueError:
+        await ctx.send("Usage: `/embed (title) ~(description) ~(color)`")
+
+@client.command()
+async def embedinfo(ctx):
+    embed = discord.Embed(
+        title="How to use /embed command",
+        description="To use the `/embed` command, follow this format:",
+        color=discord.Color.orange()
+    )
+    # ... (rest of your embedinfo command code)
+
+@client.command()
+async def embedDM(ctx, user: discord.User, *, args):
+    try:
+        arg_list = args.split("~")
+        if len(arg_list) != 4:
+            raise ValueError()
+
+        title = arg_list[1].strip()
+        description = arg_list[2].strip()
+        color_name = arg_list[3].strip().lower()
+
+        color_mapping = {
+            "red": discord.Color.red(),
+            "green": discord.Color.green(),
+            "blue": discord.Color.blue(),
+        }
+        color = color_mapping.get(color_name, discord.Color.default)
+
+        embed = discord.Embed(
+            title=title.capitalize(),
+            description=description.capitalize(),
+            color=color
+        )
+        embed.set_footer(text=f"Sent by: {ctx.author.name}")
+        await user.send(embed=embed)
+
+        await ctx.send(f"Embed sent to {user.name}'s DM!")
+        await ctx.message.delete()
+
+    except ValueError:
+        await ctx.send("Usage: `/embedDM @person ~ title ~ description ~ color`")
+
+@client.command()
+async def ask(ctx, *, question):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": question}
+            ],
+            api_key=os.getenv('OPENAI_API_KEY')
+        )
+
+        answer = response.choices[0].message["content"].strip()
+
+        # Send the user's input and AI-generated response together
+        reply = f"User: {question}\nAI: {answer}"
+        message = await ctx.send(reply)
+
+    except Exception as err:
+      
+       # Send an error message and react with a red flag emoji on the bot's message
+        error_message = await ctx.send("An error occurred while generating a response. if you think this was a misstake please react with the red box")
+        await error_message.add_reaction("🟥")
+
+        def check(reaction, user):
+            return (
+                reaction.emoji == "🟥"
+                and reaction.message == error_message
+                and user != client.user
+            )
+
+        try:
+            reaction, user = await client.wait_for("reaction_add", check=check)
+            # Replace with the correct server ID and channel ID
+            selected_server_id = PLEASE CHANGE ME 
+            selected_channel_id = PLEASE CHANGE ME 
+
+            server = client.get_guild(selected_server_id)
+            channel = server.get_channel(selected_channel_id)
+
+            await channel.send(f"User {user.mention} flagged an error: {error_message.jump_url} this error is automated and may not be correct user did /ask {question} and bot faced geration issues")
+
+        except asyncio.TimeoutError:
+            pass  # No need for timeout handling
+
+try:
+    client.run(os.getenv('TOKEN'))
+except Exception as err:
+    raise err
+
